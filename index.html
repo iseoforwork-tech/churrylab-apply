@@ -368,6 +368,12 @@ input:focus,textarea:focus{outline:2px solid var(--navy);outline-offset:1px;bord
       <label class="chk"><input type="checkbox" id="formDone"><span>면접 가능 시간 구글폼을 제출했습니다.</span></label>
       <p class="err"></p>
     </div>
+    <div class="note only-editor f" id="f-portfolioSent">
+      <dl><dt>포트폴리오</dt><dd>만든 영상을 <b>iseo@churrylab.com</b>으로 11월 22일(일) 22시까지 메일로 보내 주세요.</dd></dl>
+      <hr>
+      <label class="chk"><input type="checkbox" id="portfolioSent"><span>포트폴리오(만든 영상)를 iseo@churrylab.com으로 메일로 보냈습니다.</span></label>
+      <p class="err"></p>
+    </div>
     <div class="note f" id="f-instaFollow">
       <dl><dt>인스타그램</dt><dd>선발과 관련된 공지가 올라오는 곳입니다.<br><a class="lnk" href="https://www.instagram.com/churrylab/" target="_blank" rel="noopener">@churrylab 열기<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2h6v6M10 2 3 9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></dd></dl>
       <hr>
@@ -489,7 +495,7 @@ var API = 'https://script.google.com/macros/s/AKfycbzoXxu2VEfCa4d_NO_i0l3cEEWPD-
   /* 확인(서버와 같은 순서) */
   function checked(name) { return Array.prototype.map.call(document.querySelectorAll('input[name="' + name + '"]:checked'), function (e) { return e.value; }); }
   function collect() {
-    var d = { sid: sid, name: val('name'), birth: val('birth'), phone: val('phone'), email: val('email'), region: val('region'), univ: val('univ'), dept: val('dept'), grade: val('grade'), period: val('period'), intro: val('intro'), career: [], consent: (checked('consent')[0] || ''), instaFollow: $('instaFollow').checked };
+    var d = { sid: sid, name: val('name'), birth: val('birth'), phone: val('phone'), email: val('email'), region: val('region'), univ: val('univ'), dept: val('dept'), grade: val('grade'), period: val('period'), intro: val('intro'), career: [], consent: (checked('consent')[0] || ''), instaFollow: $('instaFollow').checked, portfolioSent: $('portfolioSent').checked };
     Array.prototype.forEach.call($('career').querySelectorAll('.crow'), function (r) {
       function g(c) { return (r.querySelector('.' + c).value || '').trim(); }
       d.career.push({ p: g('cp'), o: g('co'), r: g('cr') });
@@ -526,6 +532,7 @@ var API = 'https://script.google.com/macros/s/AKfycbzoXxu2VEfCa4d_NO_i0l3cEEWPD-
     if (role === 'assist' && !d.scoreAck) e('scoreAck', '성적 증빙 안내를 확인하고 체크해 주세요.');
     if (d.consent !== 'yes') e('consent', d.consent === 'no' ? '동의하지 않으면 지원서 접수와 전형 진행이 어려워요.' : '동의 여부를 골라 주세요.');
     if (role === 'assist' && !d.formDone) e('formDone', '면접 가능 시간 구글폼을 제출한 뒤 체크해 주세요.');
+    if (role === 'editor' && !d.portfolioSent) e('portfolioSent', '포트폴리오(만든 영상)를 iseo@churrylab.com으로 메일로 보낸 뒤 체크해 주세요.');
     if (!d.instaFollow) e('instaFollow', '연구소 인스타그램 @churrylab을 팔로우한 뒤 체크해 주세요.');
     return errs;
   }
