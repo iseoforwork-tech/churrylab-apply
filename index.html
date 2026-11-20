@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2027 2차 모집 지원서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--navy:#1B1E45;--sub:#5A5F82;--bg:#F2F6FA;--line:#E4E8F0;--card:#FFFFFF;--edge:#C9CFE0;--err:#C62F3A;}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--navy);font:400 16px/1.55 Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;letter-spacing:-.01em;word-break:keep-all;overflow-wrap:break-word}
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 64px}
+[hidden]{display:none!important}
+body[data-role=assist] .only-editor{display:none!important}
+body[data-role=editor] .only-assist{display:none!important}
+a{color:inherit}
+button,input,textarea,select{font:inherit;color:inherit}
+
+/* 머리 */
+.head{padding-bottom:14px;border-bottom:2px solid var(--navy)}
+.eyebrow{margin:0 0 6px;font-size:13px;font-weight:500;color:var(--sub)}
+.titlerow{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px}
+h1{margin:0;font-size:28px;line-height:1.25;font-weight:800;letter-spacing:-.02em}
+.chip-s{display:inline-flex;align-items:center;height:32px;padding:0 12px;border-radius:8px;background:var(--navy);color:#fff;font-size:15px;font-weight:700}
+.meta{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;margin:12px 0 0;font-size:14px}
+.meta dt{color:var(--sub)}.meta dd{margin:0;font-weight:600;font-variant-numeric:tabular-nums}
+.meta a{text-decoration:none}
+.brand{display:block;height:56px;width:auto;margin:0 0 14px}
+
+/* 안내 표 */
+.info{margin:16px 0 0;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.info .r{display:grid;grid-template-columns:128px 1fr;border-top:1px solid var(--line)}
+.info .r:first-child{border-top:0}
+.info .k{background:var(--bg);padding:12px 12px;font-size:14px;font-weight:700;display:flex;align-items:center}
+.info .v{padding:12px 14px;font-weight:500}
+.info .v small{display:block;font-size:13px;color:var(--sub);margin-top:2px}
+.info .v .lnk,.note .lnk{display:inline-flex;align-items:center;gap:4px;min-height:32px;margin-top:2px;font-size:14px;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+
+/* 구역 */
+form{counter-reset:sec}
+.sec{margin-top:28px;counter-increment:sec}
+.sec>h2{display:flex;align-items:center;gap:10px;margin:0 0 12px;font-size:20px;font-weight:800;letter-spacing:-.02em}
+.sec>h2::before{content:counter(sec);flex:none;width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.sec>h2 .side{margin-left:auto;font-size:13px;font-weight:500;color:var(--sub);text-align:right}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 16px}
+.stack{display:grid;gap:16px}.stack>*{min-width:0}
+.g2{display:grid;gap:16px}
+@media(min-width:640px){.g2{grid-template-columns:1fr 1fr}.card{padding:22px 22px}}
+
+/* 칸 */
+.f>label,.f>.lab{display:flex;align-items:baseline;gap:8px;margin-bottom:6px;font-size:14px;font-weight:700}
+.req{font-size:12px;font-weight:600;color:var(--sub)}
+.hint{margin:0 0 8px;font-size:14px;color:var(--sub)}
+input[type=text],input[type=email],input[type=tel],textarea{width:100%;height:48px;padding:0 14px;border:1px solid var(--edge);border-radius:10px;background:#fff;font-size:16px;line-height:1.4;-webkit-appearance:none;appearance:none}
+textarea{height:auto;min-height:150px;padding:12px 14px;resize:vertical}
+input::placeholder,textarea::placeholder{color:#8A90AB}
+input:focus,textarea:focus{outline:2px solid var(--navy);outline-offset:1px;border-color:var(--navy)}
+.err{display:none;margin:6px 0 0;font-size:14px;font-weight:600;color:var(--err)}
+.has-err .err{display:block}
+.has-err input[type=text],.has-err textarea,.has-err .dz,.has-err .opts{border-color:var(--err)}
+.count{margin:4px 0 0;text-align:right;font-size:13px;color:var(--sub)}
+
+/* 고르기 칩 · 칸 */
+.vh{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{position:relative;display:block;cursor:pointer}
+.opt .in{display:flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border:1px solid var(--edge);border-radius:10px;background:#fff;font-weight:600}
+.opt input:checked+.in{background:var(--navy);border-color:var(--navy);color:#fff}
+.opt input:focus-visible+.in,.chk input:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+.chk{display:flex;align-items:flex-start;gap:12px;min-height:48px;padding:10px 0;cursor:pointer;font-weight:600}
+.chk input{flex:none;width:24px;height:24px;margin:0;accent-color:var(--navy)}
+.chk.light{font-weight:500}
+.radios{display:flex;flex-wrap:wrap;gap:4px 24px}
+.radios .chk{min-height:44px;padding:8px 0;font-weight:600}
+.radios .chk input{border-radius:50%}
+
+/* 수업 시간 */
+.slots{display:grid;gap:8px}
+.slot{position:relative;display:block}
+.slot .in{display:flex;align-items:center;gap:14px;min-height:64px;padding:10px 14px;border:1px solid var(--edge);border-radius:12px;background:#fff;cursor:pointer}
+.slot .day{flex:none;width:36px;font-size:16px;font-weight:800}
+.slot .tp{flex:1;min-width:0;display:block}
+.slot .time{display:block;font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.slot .place{display:block;font-size:14px;color:var(--sub)}
+.tick{flex:none;position:relative;width:24px;height:24px;border:2px solid #A9B0C8;border-radius:6px;background:#fff}
+.slot input:checked+.in{background:var(--navy);border-color:var(--navy);color:#fff}
+.slot input:checked+.in .place{color:#C9CEEA}
+.slot input:checked+.in .tick{border-color:#fff}
+.slot input:checked+.in .tick::after{content:"";position:absolute;left:6px;top:1px;width:7px;height:13px;border:solid var(--navy);border-width:0 3px 3px 0;transform:rotate(45deg)}
+.slot input:focus-visible+.in{outline:2px solid var(--navy);outline-offset:2px}
+.slot.closed .in{cursor:default;background:#F7F9FC;border-style:dashed}
+.slot.closed .day,.slot.closed .time,.slot.closed .place{color:#A3A9C0}
+.stamp{flex:none;padding:3px 10px;border:2px solid #D64545;border-radius:4px;color:#D64545;font-size:14px;font-weight:800;transform:rotate(-6deg)}
+@media(min-width:720px){
+ .slots{grid-template-columns:repeat(6,1fr)}
+ .slot .in{flex-direction:column;justify-content:center;gap:6px;min-height:150px;padding:14px 6px;text-align:center}
+ .slot .day{width:auto;font-size:18px}
+ .slot .time{font-size:14px;white-space:nowrap}
+}
+
+/* 사진 · 파일 */
+.photo{display:flex;gap:16px;align-items:flex-start}
+.pv{flex:none;width:96px;height:128px;border:1px solid var(--edge);border-radius:10px;background:#F7F9FC;display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px;color:var(--sub);overflow:hidden}
+.pv img{width:100%;height:100%;object-fit:cover}
+.fbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:48px;padding:0 18px;border:1.5px solid var(--navy);border-radius:10px;background:#fff;color:var(--navy);font-weight:700;cursor:pointer}
+.f>label.fbtn{display:inline-flex;align-items:center;margin:0;font-size:16px}
+.f>label.chk{margin:0;font-size:16px;align-items:flex-start}
+.fbtn:focus-within{outline:2px solid var(--navy);outline-offset:2px}
+.flist{margin:10px 0 0;padding:0;list-style:none}
+.fi{display:flex;align-items:center;gap:8px;min-height:48px;padding:0 0 0 12px;border:1px solid var(--line);border-radius:10px;background:#F7F9FC}
+.fi+.fi{margin-top:6px}
+.fi .n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;font-weight:600}
+.fi .s{flex:none;font-size:13px;color:var(--sub)}
+.fi .s.bad{color:var(--err);font-weight:700}
+.fi .x{flex:none;width:44px;height:44px;border:0;background:none;font-size:22px;line-height:1;color:var(--sub);cursor:pointer}
+.fmsg{margin:6px 0 0;font-size:14px;font-weight:600;color:var(--err)}
+.dz{padding:0}
+.sep{height:1px;background:var(--line);margin:20px 0}
+
+/* 경력 */
+.career{display:grid;gap:10px}
+.crow{display:grid;grid-template-columns:1fr 44px;align-items:center;gap:8px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#F7F9FC}
+.crow .no{font-size:13px;font-weight:700;color:var(--sub)}
+.crow input{grid-column:1/-1}
+.crow .x{grid-column:2;grid-row:1;width:44px;height:44px;margin:-10px -6px -10px 0;border:0;background:none;font-size:22px;line-height:1;color:var(--sub);cursor:pointer}
+.career.one .x{display:none}
+.career+.fbtn{margin-top:10px}
+@media(min-width:640px){.crow{grid-template-columns:30px 1fr 1.3fr 1.7fr 44px;gap:10px}.crow .no{text-align:center}.crow input{grid-column:auto}.crow .x{grid-column:5;margin:0}.career.one .crow{grid-template-columns:30px 1fr 1.3fr 1.7fr}}
+
+/* 안내 블록 */
+.note{padding:16px;border-radius:12px;background:var(--bg)}
+.note dl{display:grid;grid-template-columns:72px 1fr;gap:6px 12px;margin:0;font-size:15px}
+.note dt{font-weight:700}.note dd{margin:0}
+.note hr{border:0;border-top:1px solid var(--edge);margin:14px 0 4px}
+.note+.note{margin-top:12px}
+.note .ask{display:flex;flex-wrap:wrap;align-items:center;gap:0 20px}
+.note .ask b{font-size:15px}
+
+/* 제출 · 끝 */
+.submit{margin-top:28px}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:56px;padding:0 20px;border:0;border-radius:12px;background:var(--navy);color:#fff;font-size:18px;font-weight:800;text-decoration:none;cursor:pointer}
+.btn:disabled{opacity:.55;cursor:default}
+.btn.ghost{background:#fff;color:var(--navy);border:1.5px solid var(--navy)}
+.btn:focus-visible{outline:3px solid var(--navy);outline-offset:3px}
+.status{min-height:24px;margin:12px 0 0;text-align:center;font-size:15px;font-weight:600;color:var(--sub)}
+.status.bad{color:var(--err)}
+.screen{margin-top:24px;padding:28px 20px;background:var(--card);border:1px solid var(--line);border-radius:20px}
+.screen h2{margin:0 0 10px;font-size:26px;font-weight:800;letter-spacing:-.02em}
+.screen p{margin:0 0 20px;color:var(--sub);font-size:17px}
+.screen p strong{color:var(--navy)}
+.pick{display:grid;gap:12px}
+.pick a{display:block;padding:18px 18px;border:1.5px solid var(--navy);border-radius:14px;background:#fff;text-decoration:none}
+.pick a b{display:block;font-size:20px;font-weight:800}
+.pick a span{display:block;margin-top:2px;font-size:14px;color:var(--sub)}
+.pick a:hover{background:var(--navy);color:#fff}.pick a:hover span{color:#C9CEEA}
+@media(min-width:640px){h1{font-size:34px}.pick{grid-template-columns:1fr 1fr}.screen{padding:36px 32px}}
+@media(min-width:640px){.head .meta{position:absolute;right:0;top:0;margin:0}.head{position:relative}}
+</style>
+</head>
+<body data-role="">
+<div class="wrap">
+
+<header class="head" id="head">
+  <img class="brand" alt="이규철 과학 연구소" width="96" height="56" src="data:image/png;base64,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">
+  <p class="eyebrow">2027 이규철 과학연구소 · 현장 조교 &amp; 영상 편집자 채용</p>
+  <div class="titlerow"><h1 id="h1">지원서</h1><span class="chip-s">2차 모집</span></div>
+  <dl class="meta"><dt>문의</dt><dd><a href="mailto:iseo@churrylab.com">iseo@churrylab.com</a><br><a href="tel:010-5555-9375">010-5555-9375</a></dd><dt>마감</dt><dd>11월 22일(일) 22시</dd></dl>
+</header>
+
+<!-- 역할 고르기 -->
+<section class="screen" id="start" hidden>
+  <h2>2차 모집 지원서</h2>
+  <p>지원할 자리를 골라 주세요.</p>
+  <div class="pick">
+    <a id="lnkA" href="?role=assist"><b>현장 조교</b><span>2027학년도 수능 응시자 · 특화 과목 수업 조교</span></a>
+    <a id="lnkE" href="?role=editor"><b>영상 편집자</b><span>포트폴리오(만든 영상) 메일 제출</span></a>
+  </div>
+</section>
+
+<!-- 마감 -->
+<section class="screen" id="closed" hidden>
+  <h2>마감됐습니다</h2>
+  <p>지원서 접수가 11월 22일(일) 22시에 끝났습니다.<br>문의: iseo@churrylab.com · 010-5555-9375</p>
+</section>
+
+<!-- 접수 끝 -->
+<section class="screen" id="done" hidden>
+  <h2>접수됐습니다</h2>
+  <div class="only-assist">
+    <p><strong>면접 가능 시간 구글폼도 11월 22일(일) 22시까지 내 주세요.</strong></p>
+    <a class="btn" href="https://forms.gle/TzibqK4MDr1w1wan6" target="_blank" rel="noopener">면접 가능 시간 구글폼 열기</a>
+  </div>
+  <div class="only-editor">
+    <p><strong>포트폴리오(만든 영상)를 iseo@churrylab.com으로 11월 22일(일) 22시까지 보내 주세요.</strong></p>
+  </div>
+</section>
+
+<main id="formWrap" hidden>
+<div class="info" id="info">
+  <div class="only-assist">
+    <div class="r"><div class="k">지원 자격</div><div class="v">2027학년도 대학수학능력시험 응시자</div></div>
+    <div class="r"><div class="k">지원서 마감</div><div class="v">11월 22일(일) 22시</div></div>
+    <div class="r"><div class="k">면접</div><div class="v">11월 28일(토) ~ 29일(일)<br><a class="lnk" href="https://forms.gle/TzibqK4MDr1w1wan6" target="_blank" rel="noopener">가능 시간 구글폼 제출하기<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2h6v6M10 2 3 9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div></div>
+    <div class="r"><div class="k">최종 결과 발표</div><div class="v">11월 30일(월)</div></div>
+    <div class="r"><div class="k">수능 성적표 제출</div><div class="v">12월 12일(토)<small>성적 통지 2026년 12월 11일(금) 이후</small></div></div>
+  </div>
+  <div class="only-editor">
+    <div class="r"><div class="k">포트폴리오</div><div class="v">제작 영상들을 iseo@churrylab.com으로 메일 제출 (필수)</div></div>
+    <div class="r"><div class="k">지원서 마감</div><div class="v">11월 22일(일) 22시</div></div>
+    <div class="r"><div class="k">최종 결과 발표</div><div class="v">11월 30일(월)</div></div>
+  </div>
+</div>
+
+<form id="form" novalidate autocomplete="on">
+
+<!-- 인적 사항 · 학력 -->
+<section class="sec">
+  <h2>인적 사항 · 학력</h2>
+  <div class="card stack">
+    <div class="g2">
+      <div class="f" id="f-name"><label for="name">이름 <span class="req">필수</span></label><input type="text" id="name" maxlength="30" autocomplete="name"><p class="err"></p></div>
+      <div class="f" id="f-birth"><label for="birth">출생년도 <span class="req">필수</span></label><input type="text" id="birth" inputmode="numeric" maxlength="4" placeholder="예: 2008" autocomplete="bday-year"><p class="err"></p></div>
+    </div>
+    <div class="g2">
+      <div class="f" id="f-phone"><label for="phone">연락처 <span class="req">필수</span></label><input type="tel" id="phone" maxlength="20" placeholder="010-0000-0000" autocomplete="tel"><p class="err"></p></div>
+      <div class="f" id="f-email"><label for="email">이메일 <span class="req">필수</span></label><input type="email" id="email" maxlength="100" autocomplete="email"><p class="err"></p></div>
+    </div>
+    <div class="f" id="f-region"><label for="region">거주 지역 <span class="req">필수</span></label><input type="text" id="region" maxlength="60" placeholder="예: 서울시 강남구 · 시와 구까지"><p class="err"></p></div>
+    <div class="f only-assist" id="f-school"><label for="school">고등학교 <span class="req">필수</span></label><input type="text" id="school" maxlength="60"><p class="err"></p></div>
+    <div class="g2">
+      <div class="f" id="f-univ"><label for="univ">대학교</label><input type="text" id="univ" maxlength="60"><p class="err"></p></div>
+      <div class="f" id="f-dept"><label for="dept">학과</label><input type="text" id="dept" maxlength="60"><p class="err"></p></div>
+    </div>
+    <div class="f" id="f-grade"><label for="grade">학년(학번)</label><input type="text" id="grade" maxlength="30" placeholder="다니는 사람만 기입"><p class="err"></p></div>
+    <div class="f" id="f-photo">
+      <div class="lab">사진 (3×4cm) <span class="req">필수</span></div>
+      <div class="photo">
+        <div class="pv" id="pv">사진<br>(3×4cm)</div>
+        <div>
+          <label class="fbtn"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>사진 추가<input class="vh" type="file" id="photoIn" accept="image/*"></label>
+          <p class="hint" style="margin:8px 0 0">이미지 파일 · 10MB 이하</p>
+          <ul class="flist" id="fl-photo"></ul>
+        </div>
+      </div>
+      <p class="err"></p>
+    </div>
+  </div>
+</section>
+
+<!-- 지원 정보 -->
+<section class="sec">
+  <h2>지원 정보</h2>
+  <div class="card stack">
+    <div class="f only-assist" id="f-subjects">
+      <div class="lab">특화 과목 <span class="req">필수 · 복수 선택 가능</span></div>
+      <div class="opts" id="subjects">
+        <label class="opt"><input class="vh" type="checkbox" name="subjects" value="물리"><span class="in">물리</span></label>
+        <label class="opt"><input class="vh" type="checkbox" name="subjects" value="화학"><span class="in">화학</span></label>
+        <label class="opt"><input class="vh" type="checkbox" name="subjects" value="생명과학"><span class="in">생명과학</span></label>
+        <label class="opt"><input class="vh" type="checkbox" name="subjects" value="지구과학"><span class="in">지구과학</span></label>
+      </div>
+      <p class="err"></p>
+    </div>
+    <div class="f" id="f-period"><label for="period">근무 가능 기간 <span class="req">필수</span></label><input type="text" id="period" maxlength="100" placeholder="월, 년 단위로 기입"><p class="err"></p></div>
+  </div>
+</section>
+
+<!-- 가능한 수업 시간 -->
+<section class="sec only-assist">
+  <h2>가능한 수업 시간 <span class="side">가능한 시간에 모두 표시해 주세요</span></h2>
+  <div class="card f" id="f-slots">
+    <div class="slots" id="slots">
+      <label class="slot"><input class="vh" type="checkbox" name="slots" value="tue1330"><span class="in"><span class="day">화</span><span class="tp"><span class="time">13:30-16:30</span><span class="place">동탄 이투스 X</span></span><span class="tick"></span></span></label>
+      <label class="slot"><input class="vh" type="checkbox" name="slots" value="fri1830"><span class="in"><span class="day">금</span><span class="tp"><span class="time">18:30-22:00</span><span class="place">중계 학림</span></span><span class="tick"></span></span></label>
+      <div class="slot closed" aria-disabled="true"><span class="in"><span class="day">토</span><span class="tp"><span class="time">13:30-17:00</span><span class="place">대치 다원</span></span><span class="stamp">마감</span></span></div>
+      <div class="slot closed" aria-disabled="true"><span class="in"><span class="day">토</span><span class="tp"><span class="time">18:30-22:00</span><span class="place">대치 명인</span></span><span class="stamp">마감</span></span></div>
+      <label class="slot"><input class="vh" type="checkbox" name="slots" value="sun0930"><span class="in"><span class="day">일</span><span class="tp"><span class="time">09:30-13:00</span><span class="place">대치 미래탐구</span></span><span class="tick"></span></span></label>
+      <div class="slot closed" aria-disabled="true"><span class="in"><span class="day">일</span><span class="tp"><span class="time">14:00-17:30</span><span class="place">목동 다원</span></span><span class="stamp">마감</span></span></div>
+    </div>
+    <p class="err"></p>
+  </div>
+</section>
+
+<!-- 성적 · 경력 · 자기소개 -->
+<section class="sec">
+  <h2><span class="only-assist">성적 · 경력 · 자기소개</span><span class="only-editor">경력 · 자기소개</span></h2>
+  <div class="card stack">
+    <div class="f only-assist" id="f-csat">
+      <div class="lab">수능 응시 <span class="req">필수</span></div>
+      <label class="chk"><input type="checkbox" id="csat"><span>응시함</span></label>
+      <p class="hint" style="margin:0">2027학년도 수능 응시자만 지원 가능</p>
+      <p class="err"></p>
+    </div>
+
+    <div class="only-assist stack" id="scoreBox">
+      <div class="f" id="f-scores">
+        <div class="lab">성적</div>
+        <div class="stack">
+          <div class="f"><label for="naesin">내신</label><input type="text" id="naesin" maxlength="200" placeholder="특화 과목 성적 (과목 · 시험 · 등급)"></div>
+          <div class="f"><label for="mogo">모의고사</label><input type="text" id="mogo" maxlength="200"></div>
+          <div class="f"><label for="gachae">수능 가채점</label><input type="text" id="gachae" maxlength="200"></div>
+        </div>
+        <p class="err"></p>
+      </div>
+      <div class="f" id="f-proof">
+        <div class="lab">성적 증빙 <span class="req">필수</span></div>
+        <p class="hint">꼭 낼 것: 2027학년도 수능 응시표, 수능 가채점 결과<br>있으면 함께: 내신 성적표, 모의고사 성적표<br>이미지나 PDF · 파일당 10MB 이하 · 5개까지</p>
+        <label class="fbtn"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>파일 추가<input class="vh" type="file" id="proofIn" accept="image/*,application/pdf,.pdf,.heic,.heif" multiple></label>
+        <ul class="flist" id="fl-proof"></ul>
+        <p class="err"></p>
+      </div>
+      <div class="f" id="f-careerFiles">
+        <div class="lab">경력 증빙</div>
+        <p class="hint">재직·활동 확인서 등 · 이미지나 PDF · 파일당 10MB 이하 · 3개까지</p>
+        <label class="fbtn"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>파일 추가<input class="vh" type="file" id="careerIn" accept="image/*,application/pdf,.pdf,.heic,.heif" multiple></label>
+        <ul class="flist" id="fl-career"></ul>
+        <p class="err"></p>
+      </div>
+      <div class="sep" style="margin:0"></div>
+    </div>
+
+    <div class="f" id="f-career">
+      <div class="lab">경력</div>
+      <div class="career one" id="career"></div>
+      <button type="button" class="fbtn" id="addCareer"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>경력 추가</button>
+      <p class="err"></p>
+    </div>
+
+    <div class="f" id="f-intro">
+      <label for="intro">자기소개 <span class="req">필수</span></label>
+      <textarea id="intro" maxlength="1500" placeholder="지원 동기와 강점을 3~5줄로 적어 주세요."></textarea>
+      <p class="count"><span id="cnt">0</span>/1500</p>
+      <p class="err"></p>
+    </div>
+  </div>
+</section>
+
+<!-- 확인과 동의 -->
+<section class="sec">
+  <h2>확인과 동의 <span class="side">개인정보 보호법 제15조</span></h2>
+  <div class="card">
+    <div class="note only-assist f" id="f-scoreAck">
+      <dl><dt>성적 증빙</dt><dd>지원할 때는 수능 응시표와 가채점 결과(내신·모의고사 성적표가 있으면 함께)로 성적을 확인합니다. 수능 성적표가 나오면(12월 11일 성적 통지) 정해진 기한까지 반드시 제출해야 하며, 제출하지 못하면 선발되었더라도 합격이 취소됩니다.</dd></dl>
+      <hr>
+      <label class="chk"><input type="checkbox" id="scoreAck"><span>위 내용을 확인했으며, 수능 성적표를 기한 안에 제출하지 못하면 합격이 취소되는 데 동의합니다.</span></label>
+      <p class="err"></p>
+    </div>
+    <div class="note f" id="f-consent">
+      <dl>
+        <dt>수집 목적</dt><dd><span class="only-assist">현장 조교 채용 전형 진행과 지원자 연락</span><span class="only-editor">영상 편집자 채용 전형 진행과 지원자 연락</span></dd>
+        <dt>수집 항목</dt><dd><span class="only-assist">이름, 출생년도, 연락처, 이메일, 거주 지역, 사진, 고등학교, 대학교 · 학과 · 학년(학번), 특화 과목, 근무 가능 기간, 가능한 수업 시간, 성적, 성적 증빙 자료, 경력, 경력 증빙 자료</span><span class="only-editor">이름, 출생년도, 연락처, 이메일, 거주 지역, 사진, 대학교 · 학과 · 학년(학번), 근무 가능 기간, 경력, 포트폴리오</span></dd>
+        <dt>보유 기간</dt><dd>채용 전형이 끝난 날부터 3개월 보관한 뒤 파기</dd>
+        <dt>거부 권리</dt><dd>동의하지 않을 수 있습니다. 다만 동의하지 않으면 지원서 접수와 전형 진행이 어렵습니다.</dd>
+      </dl>
+      <hr>
+      <div class="ask"><b>위 내용에 동의합니까?</b>
+        <div class="radios" role="radiogroup" aria-label="개인정보 수집 이용 동의">
+          <label class="chk"><input type="radio" name="consent" value="yes"><span>동의함</span></label>
+          <label class="chk"><input type="radio" name="consent" value="no"><span>동의하지 않음</span></label>
+        </div>
+      </div>
+      <p class="err"></p>
+    </div>
+    <div class="note only-assist f" id="f-formDone">
+      <dl><dt>면접 시간</dt><dd>구글폼으로 따로 받습니다.<br><a class="lnk" href="https://forms.gle/TzibqK4MDr1w1wan6" target="_blank" rel="noopener">구글폼 열기<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2h6v6M10 2 3 9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></dd></dl>
+      <hr>
+      <label class="chk"><input type="checkbox" id="formDone"><span>면접 가능 시간 구글폼을 제출했습니다.</span></label>
+      <p class="err"></p>
+    </div>
+    <div class="note f" id="f-instaFollow">
+      <dl><dt>인스타그램</dt><dd>선발과 관련된 공지가 올라오는 곳입니다.<br><a class="lnk" href="https://www.instagram.com/churrylab/" target="_blank" rel="noopener">@churrylab 열기<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2h6v6M10 2 3 9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></dd></dl>
+      <hr>
+      <label class="chk"><input type="checkbox" id="instaFollow"><span>@churrylab을 팔로우했습니다.</span></label>
+      <p class="err"></p>
+    </div>
+  </div>
+</section>
+
+<div class="submit">
+  <button type="submit" class="btn" id="go">지원서 제출</button>
+  <p class="status" id="status" role="status" aria-live="polite"></p>
+</div>
+</form>
+</main>
+</div>
+
+<script>
+var BOOT = (function () { var r = new URLSearchParams(location.search).get('role'); if (r !== 'assist' && r !== 'editor') r = ''; return { role: r, base: location.pathname, closed: Date.now() >= Date.UTC(2026, 10, 22, 13, 0, 0) }; })();
+var API = 'https://script.google.com/macros/s/AKfycbzoXxu2VEfCa4d_NO_i0l3cEEWPD-cQu6Y4a1jo5QR7JootcMTldPdLeQLYEd6agzCiSw/exec';
+(function () {
+  var role = BOOT.role, MAXB = 10 * 1024 * 1024;
+  var EXT = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', gif: 'image/gif', webp: 'image/webp', heic: 'image/heic', heif: 'image/heif', pdf: 'application/pdf' };
+  var IMG = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'];
+  var MAXN = { photo: 1, proof: 5, career: 3 };
+  var FILES = { photo: [], proof: [], career: [] };
+  var sid = (function () { var s = '', a = 'abcdefghijklmnopqrstuvwxyz0123456789'; for (var i = 0; i < 20; i++) s += a.charAt(Math.floor(Math.random() * a.length)); return s; })();
+  var busy = false;
+  function $(id) { return document.getElementById(id); }
+  function show(id) { ['start', 'closed', 'done', 'formWrap'].forEach(function (x) { $(x).hidden = x !== id; }); document.getElementById('head').hidden = false; window.scrollTo(0, 0); }
+
+  /* 첫 화면 정하기 */
+  document.body.setAttribute('data-role', role || '');
+  var base = BOOT.base || '';
+  $('lnkA').href = base + '?role=assist'; $('lnkE').href = base + '?role=editor';
+  if (role) $('h1').textContent = (role === 'assist' ? '현장 조교' : '영상 편집자') + ' 지원서';
+  else $('h1').textContent = '지원서';
+  document.title = role ? $('h1').textContent + ' · 2027 2차 모집' : '2027 2차 모집 지원서';
+  if (BOOT.closed) show('closed'); else if (!role) show('start'); else show('formWrap');
+
+  /* 칸 도우미 */
+  function val(id) { var e = $(id); return e ? (e.value || '').trim() : ''; }
+  function setErr(field, msg) { var w = $('f-' + field); if (!w) return; w.classList.add('has-err'); var p = w.querySelector('.err'); if (p) p.textContent = msg; }
+  function clearErr(w) { w.classList.remove('has-err'); }
+  $('form').addEventListener('input', function (e) { var w = e.target.closest('.f[id^="f-"]'); if (w) clearErr(w); });
+  $('form').addEventListener('change', function (e) { var w = e.target.closest('.f[id^="f-"]'); if (w) clearErr(w); });
+  $('intro').addEventListener('input', function () { $('cnt').textContent = this.value.length; });
+  $('birth').addEventListener('input', function () { var d = this.value.replace(/\D/g, '').slice(0, 4); if (d !== this.value) this.value = d; });
+
+  /* 경력 줄 */
+  var MAXC = 10;
+  function renumber() {
+    var rows = $('career').querySelectorAll('.crow');
+    Array.prototype.forEach.call(rows, function (r, i) {
+      r.querySelector('.no').textContent = i + 1;
+      [['cp', '기간'], ['co', '기관'], ['cr', '맡은 일']].forEach(function (k) { r.querySelector('.' + k[0]).setAttribute('aria-label', '경력 ' + (i + 1) + ' ' + k[1]); });
+      r.querySelector('.x').setAttribute('aria-label', '경력 ' + (i + 1) + ' 빼기');
+    });
+    $('career').classList.toggle('one', rows.length < 2);
+    $('addCareer').hidden = rows.length >= MAXC;
+  }
+  function addCareer(focus) {
+    var r = document.createElement('div'); r.className = 'crow';
+    r.innerHTML = '<span class="no"></span><input type="text" class="cp" maxlength="40" placeholder="기간"><input type="text" class="co" maxlength="100" placeholder="기관"><input type="text" class="cr" maxlength="200" placeholder="맡은 일"><button type="button" class="x">×</button>';
+    r.querySelector('.x').addEventListener('click', function () { if (busy) return; r.remove(); renumber(); clearErr($('f-career')); });
+    $('career').appendChild(r); renumber();
+    if (focus) r.querySelector('.cp').focus();
+  }
+  addCareer(false);
+  $('addCareer').addEventListener('click', function () { if ($('career').children.length < MAXC) addCareer(true); });
+  function status(msg, bad) { var s = $('status'); s.textContent = msg || ''; s.className = 'status' + (bad ? ' bad' : ''); }
+
+  /* 파일 */
+  function extOf(n) { var m = /\.([A-Za-z0-9]{1,5})$/.exec(n || ''); return m ? m[1].toLowerCase() : ''; }
+  function sizeText(b) { return b >= 1048576 ? (b / 1048576).toFixed(1) + 'MB' : Math.max(1, Math.round(b / 1024)) + 'KB'; }
+  function fmsg(kind, text) {
+    var ul = $('fl-' + kind), m = ul.parentNode.querySelector('.fmsg');
+    if (!text) { if (m) m.remove(); return; }
+    if (!m) { m = document.createElement('p'); m.className = 'fmsg'; ul.parentNode.insertBefore(m, ul.nextSibling); }
+    m.textContent = text;
+  }
+  function renderFiles(kind) {
+    var ul = $('fl-' + kind); ul.innerHTML = '';
+    FILES[kind].forEach(function (it, i) {
+      var li = document.createElement('li'); li.className = 'fi';
+      var n = document.createElement('span'); n.className = 'n'; n.textContent = it.file.name;
+      var s = document.createElement('span'); s.className = 's' + (it.status === 'fail' ? ' bad' : '');
+      s.textContent = it.status === 'ok' ? '올림' : it.status === 'up' ? '올리는 중' : it.status === 'fail' ? '실패' : sizeText(it.file.size);
+      var x = document.createElement('button'); x.type = 'button'; x.className = 'x'; x.textContent = '×'; x.setAttribute('aria-label', it.file.name + ' 빼기');
+      x.addEventListener('click', function () { if (busy) return; FILES[kind].splice(i, 1); renderFiles(kind); if (kind === 'photo') photoPreview(); });
+      li.appendChild(n); li.appendChild(s); li.appendChild(x); ul.appendChild(li);
+    });
+  }
+  function photoPreview() {
+    var pv = $('pv'), it = FILES.photo[0];
+    if (!it) { pv.innerHTML = '사진<br>(3×4cm)'; return; }
+    pv.innerHTML = '';
+    var img = document.createElement('img'); img.alt = '사진 미리보기'; img.src = URL.createObjectURL(it.file); pv.appendChild(img);
+  }
+  function addFiles(kind, list) {
+    var msg = '';
+    Array.prototype.forEach.call(list, function (f) {
+      var ext = extOf(f.name);
+      if (!EXT[ext] || (kind === 'photo' && IMG.indexOf(ext) < 0)) { msg = '“' + f.name + '”은(는) ' + (kind === 'photo' ? '이미지 파일만' : '이미지나 PDF만') + ' 올릴 수 있어요.'; return; }
+      if (f.size > MAXB) { msg = '“' + f.name + '”은(는) 10MB를 넘어요. 10MB 이하로 줄여서 다시 골라 주세요.'; return; }
+      if (f.size < 8) { msg = '“' + f.name + '”은(는) 비어 있어요.'; return; }
+      if (kind === 'photo') { FILES.photo = [{ file: f, ext: ext, id: null, status: 'idle' }]; return; }
+      if (FILES[kind].length >= MAXN[kind]) { msg = '파일은 ' + MAXN[kind] + '개까지 올릴 수 있어요.'; return; }
+      FILES[kind].push({ file: f, ext: ext, id: null, status: 'idle' });
+    });
+    renderFiles(kind); if (kind === 'photo') photoPreview(); fmsg(kind, msg);
+    var w = $(kind === 'photo' ? 'f-photo' : kind === 'proof' ? 'f-proof' : 'f-careerFiles'); if (w && !msg) clearErr(w);
+  }
+  [['photoIn', 'photo'], ['proofIn', 'proof'], ['careerIn', 'career']].forEach(function (p) {
+    var el = $(p[0]); if (!el) return;
+    el.addEventListener('change', function () { addFiles(p[1], this.files); this.value = ''; });
+  });
+
+  /* 확인(서버와 같은 순서) */
+  function checked(name) { return Array.prototype.map.call(document.querySelectorAll('input[name="' + name + '"]:checked'), function (e) { return e.value; }); }
+  function collect() {
+    var d = { sid: sid, name: val('name'), birth: val('birth'), phone: val('phone'), email: val('email'), region: val('region'), univ: val('univ'), dept: val('dept'), grade: val('grade'), period: val('period'), intro: val('intro'), career: [], consent: (checked('consent')[0] || ''), instaFollow: $('instaFollow').checked };
+    Array.prototype.forEach.call($('career').querySelectorAll('.crow'), function (r) {
+      function g(c) { return (r.querySelector('.' + c).value || '').trim(); }
+      d.career.push({ p: g('cp'), o: g('co'), r: g('cr') });
+    });
+    if (role === 'assist') {
+      d.school = val('school'); d.subjects = checked('subjects'); d.slots = checked('slots'); d.csat = $('csat').checked;
+      d.naesin = val('naesin'); d.mogo = val('mogo'); d.gachae = val('gachae'); d.scoreAck = $('scoreAck').checked; d.formDone = $('formDone').checked;
+    }
+    return d;
+  }
+  function check(d) {
+    var errs = [];
+    function e(f, m) { errs.push([f, m]); }
+    if (!d.name) e('name', '이름을 적어 주세요.');
+    if (!/^\d{4}$/.test(d.birth) || +d.birth < 1950 || +d.birth > 2015) e('birth', '출생년도를 네 자리로 적어 주세요. 예: 2008');
+    var dg = d.phone.replace(/\D/g, '');
+    if (/[^\d\s\-]/.test(d.phone) || dg.length < 9 || dg.length > 11 || dg.charAt(0) !== '0') e('phone', '연락처를 숫자로 정확히 적어 주세요. 예: 010-1234-5678');
+    if (!/^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/.test(d.email)) e('email', '이메일 형식이 맞지 않아요.');
+    if (!d.region) e('region', '거주 지역을 적어 주세요.');
+    if (role === 'assist' && !d.school) e('school', '고등학교를 적어 주세요.');
+    if (!FILES.photo.length) e('photo', '사진을 1장 올려 주세요.');
+    if (role === 'assist') {
+      if (!d.subjects.length) e('subjects', '특화 과목을 하나 이상 골라 주세요.');
+    }
+    if (!d.period) e('period', '근무 가능 기간을 적어 주세요.');
+    if (role === 'assist') {
+      if (!d.slots.length) e('slots', '가능한 수업 시간을 하나 이상 골라 주세요.');
+      if (!d.csat) e('csat', '2027학년도 수능 응시자만 지원할 수 있어요.');
+      if (!d.naesin && !d.mogo && !d.gachae) e('scores', '내신, 모의고사, 수능 가채점 가운데 하나 이상 적어 주세요.');
+      if (!FILES.proof.length) e('proof', '수능 응시표와 가채점 결과를 올려 주세요.');
+    }
+    for (var i = 0; i < d.career.length; i++) { var c = d.career[i], n = (c.p ? 1 : 0) + (c.o ? 1 : 0) + (c.r ? 1 : 0); if (n && n < 3) { e('career', '경력은 기간, 기관, 맡은 일을 모두 적어 주세요.'); break; } }
+    if (!d.intro) e('intro', '자기소개를 적어 주세요.');
+    if (role === 'assist' && !d.scoreAck) e('scoreAck', '성적 증빙 안내를 확인하고 체크해 주세요.');
+    if (d.consent !== 'yes') e('consent', d.consent === 'no' ? '동의하지 않으면 지원서 접수와 전형 진행이 어려워요.' : '동의 여부를 골라 주세요.');
+    if (role === 'assist' && !d.formDone) e('formDone', '면접 가능 시간 구글폼을 제출한 뒤 체크해 주세요.');
+    if (!d.instaFollow) e('instaFollow', '연구소 인스타그램 @churrylab을 팔로우한 뒤 체크해 주세요.');
+    return errs;
+  }
+
+  /* 서버 부르기 */
+  function gsr(fn, args) {
+    return new Promise(function (res, rej) {
+      fetch(API, { method: 'POST', credentials: 'omit', body: JSON.stringify({ fn: fn, args: args }) })
+        .then(function (x) { return x.json(); })
+        .then(function (j) { if (j.ok) res(j.r); else rej(new Error(j.e)); }, rej);
+    });
+  }
+  function readB64(file) {
+    return new Promise(function (res, rej) {
+      var fr = new FileReader();
+      fr.onload = function () { var s = String(fr.result); res(s.slice(s.indexOf(',') + 1)); };
+      fr.onerror = function () { rej(new Error('read')); };
+      fr.readAsDataURL(file);
+    });
+  }
+  function uploadAll() {
+    var jobs = [];
+    ['photo', 'proof', 'career'].forEach(function (k) { FILES[k].forEach(function (it) { if (!it.id) jobs.push([k, it]); }); });
+    var n = jobs.length, done = 0, failed = 0;
+    return jobs.reduce(function (p, j) {
+      return p.then(function () {
+        var k = j[0], it = j[1]; it.status = 'up'; renderFiles(k);
+        status('파일 올리는 중 (' + (done + 1) + '/' + n + ')');
+        return readB64(it.file).then(function (b64) { return gsr('uploadFile', [role, sid, k, it.file.name, b64]); })
+          .then(function (r) {
+            if (r && r.ok) { it.id = r.id; it.status = 'ok'; }
+            else { it.status = 'fail'; failed++; if (r && r.code === 'closed') throw { closed: true }; fmsg(k, (r && r.message) || '올리지 못했어요.'); }
+            done++; renderFiles(k);
+          }, function (er) { if (er && er.closed) throw er; it.status = 'fail'; failed++; done++; renderFiles(k); });
+      });
+    }, Promise.resolve()).then(function () { return failed; });
+  }
+  function ids(k) { return FILES[k].map(function (it) { return it.id; }); }
+
+  $('form').addEventListener('submit', function (ev) {
+    ev.preventDefault(); if (busy) return;
+    Array.prototype.forEach.call(document.querySelectorAll('.has-err'), clearErr);
+    status('');
+    var d = collect(), errs = check(d);
+    if (errs.length) {
+      errs.forEach(function (x) { setErr(x[0] === 'scores' ? 'scores' : x[0], x[1]); });
+      var first = $('f-' + errs[0][0]); if (first) { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); var inp = first.querySelector('input,textarea'); if (inp && inp.type !== 'file') try { inp.focus({ preventScroll: true }); } catch (e1) {} }
+      status('빠진 칸이 ' + errs.length + '곳 있어요. 붉은 글씨를 확인해 주세요.', true);
+      return;
+    }
+    busy = true; $('go').disabled = true; status('제출하는 중…');
+    uploadAll().then(function (failed) {
+      if (failed) { busy = false; $('go').disabled = false; status('파일 ' + failed + '개를 올리지 못했어요. 다시 눌러 주세요.', true); return; }
+      d.files = { photo: ids('photo'), proof: ids('proof'), career: ids('career') };
+      status('접수하는 중…');
+      return gsr('submitApplication', [role, d]).then(function (r) {
+        if (r && r.ok) { show('done'); return; }
+        busy = false; $('go').disabled = false;
+        if (r && r.code === 'closed') { show('closed'); return; }
+        if (r && r.field && $('f-' + (r.field === 'career' && false ? 'careerFiles' : r.field))) {
+          var fk = r.field; if (fk === 'proof' || fk === 'career' && /파일|증빙/.test(r.message || '')) { }
+          setErr(fk, r.message); $('f-' + fk).scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (/파일/.test(r.message || '')) { FILES[r.field] && FILES[r.field].forEach(function (it) { it.id = null; it.status = 'idle'; }); }
+        }
+        status((r && r.message) || '접수하지 못했어요. 잠시 뒤 다시 해 주세요.', true);
+      });
+    }).catch(function (er) {
+      busy = false; $('go').disabled = false;
+      if (er && er.closed) { show('closed'); return; }
+      status('연결에 문제가 있어요. 잠시 뒤 다시 눌러 주세요.', true);
+    });
+  });
+})();
+</script>
+</body>
+</html>
