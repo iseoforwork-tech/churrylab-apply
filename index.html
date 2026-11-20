@@ -611,6 +611,10 @@ var API = 'https://script.google.com/macros/s/AKfycbzoXxu2VEfCa4d_NO_i0l3cEEWPD-
           all(CHK).forEach(function (e, i) { var d = doc.createElement('span'); d.className = 'capc' + (e.type === 'radio' ? ' rd' : '') + (cv[i] ? ' on' : ''); d.appendChild(doc.createElement('i')); e.parentNode.replaceChild(d, e); });
           var pi = w.querySelector('#pv img');
           if (pi && photoSrc) { var ph = doc.createElement('div'); ph.className = 'capph'; ph.style.backgroundImage = 'url("' + photoSrc + '")'; pi.parentNode.replaceChild(ph, pi); }
+          /* 숨긴 칸(다른 지원서용)은 빼야 칸 번호가 화면과 같게 매겨짐 · 값 옮긴 뒤에 뺌 */
+          all('.sec.only-' + (role === 'editor' ? 'assist' : 'editor')).forEach(function (e) { e.parentNode.removeChild(e); });
+          /* html2canvas는 숨긴 칸까지 번호를 세어 미리 적어 둠 · 보이는 순서대로 다시 적음 */
+          all('.sec>h2').forEach(function (h, i) { var p = h.querySelector('html2canvaspseudoelement'); if (p) p.textContent = String(i + 1); });
           var wr = w.getBoundingClientRect(); cssW = wr.width;
           breaks = all(BRK).map(function (e) { var r = e.getBoundingClientRect(); return r.height > 0 && (e.classList.contains('sec') || !firstShown(e)) ? r.top - wr.top - 6 : -1; }).filter(function (y) { return y > 0; });
         }
