@@ -572,6 +572,73 @@ var API = 'https://script.google.com/macros/s/AKfycbzoXxu2VEfCa4d_NO_i0l3cEEWPD-
   }
   function ids(k) { return FILES[k].map(function (it) { return it.id; }); }
 
+  /* 지원서 화면을 그대로 찍어 PDF로 · 못 만들면 서버가 만든 PDF로 대신 */
+  var LIBS = [['https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js', 'sha384-ZZ1pncU3bQe8y31yfZdMFdSpttDoPmOZg2wguVK9almUodir1PghgT0eY7Mrty8H'],
+    ['https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js', 'sha384-JcnsjUPPylna1s1fvi1u12X5qjY5OL56iySh75FdtrwhO/SWXgMjoVqcKyIIWOLk']];
+  var libP = null;
+  function libs() {
+    if (!libP) libP = Promise.all(LIBS.map(function (l) {
+      return new Promise(function (res, rej) { var s = document.createElement('script'); s.src = l[0]; s.integrity = l[1]; s.crossOrigin = 'anonymous'; s.referrerPolicy = 'no-referrer'; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+    }));
+    return libP;
+  }
+  if (role && !BOOT.closed) setTimeout(function () { libs().catch(function () {}); }, 1000);
+  var CAP_CSS = '.capv{min-height:48px;padding:12px 14px;border:1px solid var(--edge);border-radius:10px;background:#fff;font-size:16px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}.capv.ta{min-height:150px}' +
+    '.capc{flex:none;position:relative;width:24px;height:24px;border:2px solid #A9B0C8;border-radius:6px;background:#fff}.capc.rd{border-radius:50%}.capc.on{background:var(--navy);border-color:var(--navy)}' +
+    '.capc i{display:none}.capc.on i{display:block;position:absolute;left:6px;top:1px;width:7px;height:13px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg)}.capc.rd.on i{left:5px;top:5px;width:10px;height:10px;border:0;border-radius:50%;background:#fff;transform:none}' +
+    '.capph{width:100%;height:100%;background-size:cover;background-position:center}@media(min-width:640px){.crow,.career.one .crow{grid-template-columns:30px 1fr 1.3fr 1.7fr}}';
+  var TXT = 'input[type=text],input[type=email],input[type=tel],textarea', CHK = '.chk input', VH = 'input.vh[type=checkbox]';
+  var BRK = '.info .r,.sec,.card>*,.stack>*,.crow,.note';
+  function firstShown(e) { for (var p = e.previousElementSibling; p; p = p.previousElementSibling) if (p.getBoundingClientRect().height > 0) return false; return true; }
+  function timeout(p, ms) { return Promise.race([p, new Promise(function (r, j) { setTimeout(function () { j(new Error('timeout')); }, ms); })]); }
+  function makeFormPdf() {
+    var wrap = document.querySelector('.wrap'), breaks = [], cssW = 0;
+    var tv = Array.prototype.map.call(wrap.querySelectorAll(TXT), function (e) { return e.value; });
+    var cv = Array.prototype.map.call(wrap.querySelectorAll(CHK), function (e) { return e.checked; });
+    var vv = Array.prototype.map.call(wrap.querySelectorAll(VH), function (e) { return e.checked; });
+    var img = wrap.querySelector('#pv img'), photoSrc = img ? img.src : '';
+    var scale = Math.max(1, Math.min(2, Math.sqrt(12e6 / (760 * Math.max(1000, wrap.scrollHeight)))));
+    return libs().then(function () { return document.fonts && document.fonts.ready; }).then(function () {
+      return window.html2canvas(wrap, {
+        windowWidth: 800, windowHeight: 1200, scrollX: 0, scrollY: 0, scale: scale, backgroundColor: '#F2F6FA', logging: false,
+        onclone: function (doc) {
+          var w = doc.querySelector('.wrap');
+          var st = doc.createElement('style'); st.textContent = CAP_CSS; doc.head.appendChild(st);
+          function all(sel) { return Array.prototype.slice.call(w.querySelectorAll(sel)); }
+          all('.submit,.err,.fmsg,.fbtn,.fi .x,.crow .x,.count').forEach(function (e) { e.parentNode.removeChild(e); });
+          all(VH).forEach(function (e, i) { e.checked = !!vv[i]; });
+          all(TXT).forEach(function (e, i) { var d = doc.createElement('div'); d.className = 'capv' + (e.tagName === 'TEXTAREA' ? ' ta' : ''); d.textContent = tv[i] || ''; e.parentNode.replaceChild(d, e); });
+          all(CHK).forEach(function (e, i) { var d = doc.createElement('span'); d.className = 'capc' + (e.type === 'radio' ? ' rd' : '') + (cv[i] ? ' on' : ''); d.appendChild(doc.createElement('i')); e.parentNode.replaceChild(d, e); });
+          var pi = w.querySelector('#pv img');
+          if (pi && photoSrc) { var ph = doc.createElement('div'); ph.className = 'capph'; ph.style.backgroundImage = 'url("' + photoSrc + '")'; pi.parentNode.replaceChild(ph, pi); }
+          var wr = w.getBoundingClientRect(); cssW = wr.width;
+          breaks = all(BRK).map(function (e) { var r = e.getBoundingClientRect(); return r.height > 0 && (e.classList.contains('sec') || !firstShown(e)) ? r.top - wr.top - 6 : -1; }).filter(function (y) { return y > 0; });
+        }
+      });
+    }).then(function (canvas) {
+      var k = canvas.width / cssW, M = 28, pageH = cssW * 297 / 210 - 2 * M, total = canvas.height / k, cuts = [0], y = 0;
+      while (total - y > pageH) {
+        var lim = y + pageH, best = -1;
+        breaks.forEach(function (b) { if (b > y + pageH * 0.4 && b <= lim && b > best) best = b; });
+        if (best < 0) best = lim;
+        cuts.push(best); y = best;
+      }
+      cuts.push(total);
+      var pdf = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4', compress: true }), mm = 210 / cssW, n = cuts.length - 1;
+      for (var i = 0; i < n; i++) {
+        var sy = Math.round(cuts[i] * k), sh = Math.round(cuts[i + 1] * k) - sy;
+        var pc = document.createElement('canvas'); pc.width = canvas.width; pc.height = sh;
+        var g = pc.getContext('2d'); g.fillStyle = '#F2F6FA'; g.fillRect(0, 0, pc.width, sh); g.drawImage(canvas, 0, sy, canvas.width, sh, 0, 0, canvas.width, sh);
+        if (i) pdf.addPage();
+        pdf.setFillColor(242, 246, 250); pdf.rect(0, 0, 210, 297, 'F');
+        pdf.addImage(pc.toDataURL('image/jpeg', 0.9), 'JPEG', 0, M * mm, 210, sh / k * mm);
+        pdf.setFontSize(9); pdf.setTextColor(90, 95, 130); pdf.text((i + 1) + ' / ' + n, 105, 290, { align: 'center' });
+      }
+      var uri = pdf.output('datauristring');
+      return uri.slice(uri.indexOf(',') + 1);
+    });
+  }
+
   $('form').addEventListener('submit', function (ev) {
     ev.preventDefault(); if (busy) return;
     Array.prototype.forEach.call(document.querySelectorAll('.has-err'), clearErr);
@@ -587,6 +654,11 @@ var API = 'https://script.google.com/macros/s/AKfycbzoXxu2VEfCa4d_NO_i0l3cEEWPD-
     uploadAll().then(function (failed) {
       if (failed) { busy = false; $('go').disabled = false; status('파일 ' + failed + '개를 올리지 못했어요. 다시 눌러 주세요.', true); return; }
       d.files = { photo: ids('photo'), proof: ids('proof'), career: ids('career') };
+      status('지원서 PDF 만드는 중…');
+      return timeout(makeFormPdf(), 30000).then(function (b64) {
+        if (!b64 || b64.length > 13900000) return null;
+        return gsr('uploadFile', [role, sid, 'form', '지원서.pdf', b64]);
+      }).then(function (r) { if (r && r.ok) d.files.form = [r.id]; }, function () {}).then(function () {
       status('접수하는 중…');
       return gsr('submitApplication', [role, d]).then(function (r) {
         if (r && r.ok) { show('done'); return; }
@@ -598,6 +670,7 @@ var API = 'https://script.google.com/macros/s/AKfycbzoXxu2VEfCa4d_NO_i0l3cEEWPD-
           if (/파일/.test(r.message || '')) { FILES[r.field] && FILES[r.field].forEach(function (it) { it.id = null; it.status = 'idle'; }); }
         }
         status((r && r.message) || '접수하지 못했어요. 잠시 뒤 다시 해 주세요.', true);
+      });
       });
     }).catch(function (er) {
       busy = false; $('go').disabled = false;
