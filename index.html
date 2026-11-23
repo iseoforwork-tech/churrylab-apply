@@ -392,7 +392,7 @@ input:focus,textarea:focus{outline:2px solid var(--navy);outline-offset:1px;bord
 </div>
 
 <script>
-var BOOT = (function () { var r = new URLSearchParams(location.search).get('role'); if (r !== 'assist' && r !== 'editor') r = ''; return { role: r, base: location.pathname, closed: Date.now() >= Date.UTC(2026, 10, 22, 13, 0, 0) }; })();
+var BOOT = (function () { var r = new URLSearchParams(location.search).get('role'); if (r !== 'assist' && r !== 'editor') r = ''; return { role: r, base: location.pathname, closed: false }; })();
 var API = 'https://script.google.com/macros/s/AKfycbzoXxu2VEfCa4d_NO_i0l3cEEWPD-cQu6Y4a1jo5QR7JootcMTldPdLeQLYEd6agzCiSw/exec';
 (function () {
   var role = BOOT.role, MAXB = 10 * 1024 * 1024;
